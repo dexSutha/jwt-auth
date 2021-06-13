@@ -1,6 +1,6 @@
 {
-    "name": "tymon/jwt-auth",
-    "description": "JSON Web Token Authentication for Laravel and Lumen",
+    "name": "suthap/cs-jwt",
+    "description": "JSON Web Token Authentication for Laravel and Lumen (edited default claims for project requirements)",
     "keywords": [
         "auth",
         "authentication",

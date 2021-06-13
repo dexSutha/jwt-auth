@@ -11,7 +11,7 @@
 
 namespace Tymon\JWTAuth\Claims;
 
-class Subject extends Claim
+class user_id extends Claim
 {
     /**
      * {@inheritdoc}

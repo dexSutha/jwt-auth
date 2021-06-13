@@ -148,12 +148,9 @@ return [
     */
 
     'required_claims' => [
-        'iss',
-        'iat',
+        'orig_iat',
         'exp',
-        'nbf',
-        'sub',
-        'jti',
+        'user_id'
     ],
 
     /*
@@ -170,8 +167,8 @@ return [
     */
 
     'persistent_claims' => [
-        // 'foo',
-        // 'bar',
+        // 'email',
+        // 'username'
     ],
 
     /*

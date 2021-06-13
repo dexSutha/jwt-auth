@@ -58,7 +58,7 @@ class JWTGuardTest extends AbstractTestCase
     public function it_should_get_the_authenticated_user_if_a_valid_token_is_provided()
     {
         $payload = Mockery::mock(Payload::class);
-        $payload->shouldReceive('offsetGet')->once()->with('sub')->andReturn(1);
+        $payload->shouldReceive('offsetGet')->once()->with('user_id')->andReturn(1);
 
         $this->jwt->shouldReceive('setRequest')->andReturn($this->jwt);
         $this->jwt->shouldReceive('getToken')->once()->andReturn('foo.bar.baz');
@@ -90,7 +90,7 @@ class JWTGuardTest extends AbstractTestCase
     public function it_should_get_the_authenticated_user_if_a_valid_token_is_provided_and_not_throw_an_exception()
     {
         $payload = Mockery::mock(Payload::class);
-        $payload->shouldReceive('offsetGet')->once()->with('sub')->andReturn(1);
+        $payload->shouldReceive('offsetGet')->once()->with('user_id')->andReturn(1);
 
         $this->jwt->shouldReceive('setRequest')->andReturn($this->jwt);
         $this->jwt->shouldReceive('getToken')->once()->andReturn('foo.bar.baz');

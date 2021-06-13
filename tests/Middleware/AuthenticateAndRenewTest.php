@@ -49,7 +49,7 @@ class AuthenticateAndRenewTest extends AbstractMiddlewareTest
             return new Response;
         });
 
-        $this->assertSame($response->headers->get('authorization'), 'Bearer foo.bar.baz');
+        $this->assertSame($response->headers->get('authorization'), 'JWT foo.bar.baz');
     }
 
     /** @test */

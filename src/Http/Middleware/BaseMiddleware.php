@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth;
 
-/** @deprecated */
 abstract class BaseMiddleware
 {
     /**
@@ -87,7 +86,7 @@ abstract class BaseMiddleware
     protected function setAuthenticationHeader($response, $token = null)
     {
         $token = $token ?: $this->auth->refresh();
-        $response->headers->set('Authorization', 'Bearer '.$token);
+        $response->headers->set('Authorization', 'JWT '.$token);
 
         return $response;
     }

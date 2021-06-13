@@ -26,22 +26,11 @@ class CollectionTest extends AbstractTestCase
     {
         $claims = [
             new Subject(1),
-            new Issuer('http://example.com'),
             new Expiration($this->testNowTimestamp + 3600),
-            new NotBefore($this->testNowTimestamp),
             new IssuedAt($this->testNowTimestamp),
-            new JwtId('foo'),
         ];
 
         return new Collection($claims);
-    }
-
-    /** @test */
-    public function it_should_sanitize_the_claims_to_associative_array()
-    {
-        $collection = $this->getCollection();
-
-        $this->assertSame(array_keys($collection->toArray()), ['sub', 'iss', 'exp', 'nbf', 'iat', 'jti']);
     }
 
     /** @test */
@@ -49,12 +38,11 @@ class CollectionTest extends AbstractTestCase
     {
         $collection = $this->getCollection();
 
-        $this->assertFalse($collection->hasAllClaims(['sub', 'iss', 'exp', 'nbf', 'iat', 'jti', 'abc']));
+        $this->assertFalse($collection->hasAllClaims(['user_id', 'exp', 'orig_iat', 'abc']));
         $this->assertFalse($collection->hasAllClaims(['foo', 'bar']));
         $this->assertFalse($collection->hasAllClaims([]));
 
-        $this->assertTrue($collection->hasAllClaims(['sub', 'iss']));
-        $this->assertTrue($collection->hasAllClaims(['sub', 'iss', 'exp', 'nbf', 'iat', 'jti']));
+        $this->assertTrue($collection->hasAllClaims(['user_id', 'exp', 'orig_iat']));
     }
 
     /** @test */
@@ -63,6 +51,6 @@ class CollectionTest extends AbstractTestCase
         $collection = $this->getCollection();
 
         $this->assertInstanceOf(Expiration::class, $collection->getByClaimName('exp'));
-        $this->assertInstanceOf(Subject::class, $collection->getByClaimName('sub'));
+        $this->assertInstanceOf(Subject::class, $collection->getByClaimName('user_id'));
     }
 }

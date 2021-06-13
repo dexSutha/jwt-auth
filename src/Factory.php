@@ -42,11 +42,9 @@ class Factory
      * @var array
      */
     protected $defaultClaims = [
-        'iss',
-        'iat',
+        'user_id',
         'exp',
-        'nbf',
-        'jti',
+        'orig_iat',
     ];
 
     /**

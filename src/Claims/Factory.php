@@ -46,11 +46,11 @@ class Factory
     private $classMap = [
         'aud' => Audience::class,
         'exp' => Expiration::class,
-        'iat' => IssuedAt::class,
+        'orig_iat' => IssuedAt::class,
         'iss' => Issuer::class,
         'jti' => JwtId::class,
         'nbf' => NotBefore::class,
-        'sub' => Subject::class,
+        'user_id' => Subject::class,
     ];
 
     /**
@@ -126,6 +126,16 @@ class Factory
      * @return int
      */
     public function iat()
+    {
+        return Utils::now()->getTimestamp();
+    }
+
+    /**
+     * Get the Issued At (orig_iat) claim.
+     *
+     * @return int
+     */
+    public function orig_iat()
     {
         return Utils::now()->getTimestamp();
     }
@@ -225,5 +235,10 @@ class Factory
         $this->leeway = $leeway;
 
         return $this;
+    }
+
+    public function user_id($user_id=0)
+    {
+        return $user_id??0;
     }
 }

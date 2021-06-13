@@ -60,12 +60,12 @@ class FactoryTest extends AbstractTestCase
     /** @test */
     public function it_should_get_a_defined_claim_instance_when_passing_a_name_and_value()
     {
-        $this->assertInstanceOf(Subject::class, $this->factory->get('sub', 1));
-        $this->assertInstanceOf(Issuer::class, $this->factory->get('iss', 'http://example.com'));
+        $this->assertInstanceOf(Subject::class, $this->factory->get('user_id', 1));
+        // $this->assertInstanceOf(Issuer::class, $this->factory->get('iss', 'http://example.com'));
         $this->assertInstanceOf(Expiration::class, $this->factory->get('exp', $this->testNowTimestamp + 3600));
-        $this->assertInstanceOf(NotBefore::class, $this->factory->get('nbf', $this->testNowTimestamp));
-        $this->assertInstanceOf(IssuedAt::class, $this->factory->get('iat', $this->testNowTimestamp));
-        $this->assertInstanceOf(JwtId::class, $this->factory->get('jti', 'foo'));
+        // $this->assertInstanceOf(NotBefore::class, $this->factory->get('nbf', $this->testNowTimestamp));
+        $this->assertInstanceOf(IssuedAt::class, $this->factory->get('orig_iat', $this->testNowTimestamp));
+        // $this->assertInstanceOf(JwtId::class, $this->factory->get('jti', 'foo'));
     }
 
     /** @test */
@@ -77,24 +77,24 @@ class FactoryTest extends AbstractTestCase
     /** @test */
     public function it_should_make_a_claim_instance_with_a_value()
     {
-        $iat = $this->factory->make('iat');
+        $iat = $this->factory->make('orig_iat');
         $this->assertSame($iat->getValue(), $this->testNowTimestamp);
         $this->assertInstanceOf(IssuedAt::class, $iat);
 
-        $nbf = $this->factory->make('nbf');
-        $this->assertSame($nbf->getValue(), $this->testNowTimestamp);
-        $this->assertInstanceOf(NotBefore::class, $nbf);
+        // $nbf = $this->factory->make('nbf');
+        // $this->assertSame($nbf->getValue(), $this->testNowTimestamp);
+        // $this->assertInstanceOf(NotBefore::class, $nbf);
 
-        $iss = $this->factory->make('iss');
-        $this->assertSame($iss->getValue(), 'http://localhost/foo');
-        $this->assertInstanceOf(Issuer::class, $iss);
+        // $iss = $this->factory->make('iss');
+        // $this->assertSame($iss->getValue(), 'http://localhost/foo');
+        // $this->assertInstanceOf(Issuer::class, $iss);
 
         $exp = $this->factory->make('exp');
         $this->assertSame($exp->getValue(), $this->testNowTimestamp + 3600);
         $this->assertInstanceOf(Expiration::class, $exp);
 
-        $jti = $this->factory->make('jti');
-        $this->assertInstanceOf(JwtId::class, $jti);
+        // $jti = $this->factory->make('jti');
+        // $this->assertInstanceOf(JwtId::class, $jti);
     }
 
     /** @test */

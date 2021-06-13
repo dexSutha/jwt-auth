@@ -295,11 +295,11 @@ class BlacklistTest extends AbstractTestCase
     {
         $claims = [
             new Subject(1),
-            new Issuer('http://example.com'),
+            // new Issuer('http://example.com'),
             new Expiration($this->testNowTimestamp + 3600),
-            new NotBefore($this->testNowTimestamp),
+            // new NotBefore($this->testNowTimestamp),
             new IssuedAt($this->testNowTimestamp),
-            new JwtId('foobar'),
+            // new JwtId('foobar'),
         ];
         $collection = Collection::make($claims);
 
@@ -309,7 +309,7 @@ class BlacklistTest extends AbstractTestCase
 
         $this->storage->shouldReceive('get')->with(1)->once()->andReturn(['valid_until' => $this->testNowTimestamp]);
 
-        $this->assertTrue($this->blacklist->setKey('sub')->has($payload));
+        $this->assertTrue($this->blacklist->setKey('user_id')->has($payload));
         $this->assertSame(1, $this->blacklist->getKey($payload));
     }
 

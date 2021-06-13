@@ -95,7 +95,7 @@ class Blacklist
     protected function getMinutesUntilExpired(Payload $payload)
     {
         $exp = Utils::timestamp($payload['exp']);
-        $iat = Utils::timestamp($payload['iat']);
+        $iat = Utils::timestamp($payload['orig_iat']);
 
         // get the latter of the two expiration dates and find
         // the number of minutes until the expiration date,

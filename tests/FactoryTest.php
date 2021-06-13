@@ -61,31 +61,31 @@ class FactoryTest extends AbstractTestCase
         $this->claimFactory->shouldReceive('make')->twice()->with('exp')->andReturn(new Expiration($expTime));
         $this->claimFactory->shouldReceive('make')->twice()->with('jti')->andReturn(new JwtId('foo'));
         $this->claimFactory->shouldReceive('make')->twice()->with('nbf')->andReturn(new NotBefore(123));
-        $this->claimFactory->shouldReceive('make')->twice()->with('iat')->andReturn(new IssuedAt(123));
+        $this->claimFactory->shouldReceive('make')->twice()->with('orig_iat')->andReturn(new IssuedAt(123));
 
         // custom claims that override
-        $this->claimFactory->shouldReceive('get')->twice()->with('sub', 1)->andReturn(new Subject(1));
+        $this->claimFactory->shouldReceive('get')->twice()->with('user_id', 1)->andReturn(new Subject(1));
         $this->claimFactory->shouldReceive('get')->twice()->with('jti', 'foo')->andReturn(new JwtId('foo'));
         $this->claimFactory->shouldReceive('get')->twice()->with('nbf', 123)->andReturn(new NotBefore(123));
-        $this->claimFactory->shouldReceive('get')->twice()->with('iat', 123)->andReturn(new IssuedAt(123));
+        $this->claimFactory->shouldReceive('get')->twice()->with('orig_iat', 123)->andReturn(new IssuedAt(123));
 
         $this->claimFactory->shouldReceive('getTTL')->andReturn(60);
 
         // once
         $claims = $this->factory->customClaims([
-            'sub' => 1,
+            'user_id' => 1,
             'jti' => 'foo',
-            'iat' => 123,
+            'orig_iat' => 123,
             'nbf' => 123,
         ])->buildClaimsCollection();
 
         $this->validator->shouldReceive('setRefreshFlow->check')->andReturn($claims);
 
         // twice
-        $payload = $this->factory->claims(['sub' => 1, 'jti' => 'foo', 'iat' => 123, 'nbf' => 123])->make();
+        $payload = $this->factory->claims(['user_id' => 1, 'jti' => 'foo', 'orig_iat' => 123, 'nbf' => 123])->make();
 
-        $this->assertSame($payload->get('sub'), 1);
-        $this->assertSame($payload->get('iat'), 123);
+        $this->assertSame($payload->get('user_id'), 1);
+        $this->assertSame($payload->get('orig_iat'), 123);
         $this->assertSame($payload['exp'], $expTime);
         $this->assertSame($payload['jti'], 'foo');
 
@@ -95,26 +95,26 @@ class FactoryTest extends AbstractTestCase
     /** @test */
     public function it_should_return_a_payload_when_chaining_claim_methods()
     {
-        $this->claimFactory->shouldReceive('get')->twice()->with('sub', 1)->andReturn(new Subject(1));
+        $this->claimFactory->shouldReceive('get')->twice()->with('user_id', 1)->andReturn(new Subject(1));
         $this->claimFactory->shouldReceive('get')->twice()->with('foo', 'baz')->andReturn(new Custom('foo', 'baz'));
 
         $this->claimFactory->shouldReceive('make')->twice()->with('iss')->andReturn(new Issuer('/foo'));
         $this->claimFactory->shouldReceive('make')->twice()->with('exp')->andReturn(new Expiration($this->testNowTimestamp + 3600));
-        $this->claimFactory->shouldReceive('make')->twice()->with('iat')->andReturn(new IssuedAt($this->testNowTimestamp));
+        $this->claimFactory->shouldReceive('make')->twice()->with('orig_iat')->andReturn(new IssuedAt($this->testNowTimestamp));
         $this->claimFactory->shouldReceive('make')->twice()->with('jti')->andReturn(new JwtId('foo'));
         $this->claimFactory->shouldReceive('make')->twice()->with('nbf')->andReturn(new NotBefore($this->testNowTimestamp));
 
         $this->claimFactory->shouldReceive('getTTL')->andReturn(60);
 
         // once
-        $claims = $this->factory->sub(1)->foo('baz')->buildClaimsCollection();
+        $claims = $this->factory->user_id(1)->foo('baz')->buildClaimsCollection();
 
         $this->validator->shouldReceive('setRefreshFlow->check')->andReturn($claims);
 
         // twice
-        $payload = $this->factory->sub(1)->foo('baz')->make();
+        $payload = $this->factory->user_id(1)->foo('baz')->make();
 
-        $this->assertSame($payload['sub'], 1);
+        $this->assertSame($payload['user_id'], 1);
         $this->assertSame($payload->get('jti'), 'foo');
         $this->assertSame($payload->get('foo'), 'baz');
 
@@ -129,23 +129,23 @@ class FactoryTest extends AbstractTestCase
         $this->claimFactory->shouldReceive('make')->twice()->with('exp')->andReturn(new Expiration($this->testNowTimestamp + 3600));
         $this->claimFactory->shouldReceive('make')->twice()->with('jti')->andReturn(new JwtId('foo'));
         $this->claimFactory->shouldReceive('make')->twice()->with('nbf')->andReturn(new NotBefore(123));
-        $this->claimFactory->shouldReceive('make')->twice()->with('iat')->andReturn(new IssuedAt(123));
+        $this->claimFactory->shouldReceive('make')->twice()->with('orig_iat')->andReturn(new IssuedAt(123));
 
         // custom claims that override
-        $this->claimFactory->shouldReceive('get')->twice()->with('sub', 1)->andReturn(new Subject(1));
+        $this->claimFactory->shouldReceive('get')->twice()->with('user_id', 1)->andReturn(new Subject(1));
         $this->claimFactory->shouldReceive('get')->twice()->with('foo', ['bar' => [0, 0, 0]])->andReturn(new Custom('foo', ['bar' => [0, 0, 0]]));
 
         $this->claimFactory->shouldReceive('getTTL')->andReturn(60);
 
         // once
-        $claims = $this->factory->sub(1)->foo(['bar' => [0, 0, 0]])->buildClaimsCollection();
+        $claims = $this->factory->user_id(1)->foo(['bar' => [0, 0, 0]])->buildClaimsCollection();
 
         $this->validator->shouldReceive('setRefreshFlow->check')->andReturn($claims);
 
         // twice
-        $payload = $this->factory->sub(1)->foo(['bar' => [0, 0, 0]])->make();
+        $payload = $this->factory->user_id(1)->foo(['bar' => [0, 0, 0]])->make();
 
-        $this->assertSame($payload->get('sub'), 1);
+        $this->assertSame($payload->get('user_id'), 1);
         $this->assertSame($payload->get('jti'), 'foo');
         $this->assertSame($payload->get('foo'), ['bar' => [0, 0, 0]]);
         $this->assertSame($payload->get('foo.bar'), [0, 0, 0]);
@@ -160,21 +160,21 @@ class FactoryTest extends AbstractTestCase
         $this->claimFactory->shouldReceive('make')->twice()->with('iss')->andReturn(new Issuer('/foo'));
         $this->claimFactory->shouldReceive('make')->twice()->with('jti')->andReturn(new JwtId('foo'));
         $this->claimFactory->shouldReceive('make')->twice()->with('nbf')->andReturn(new NotBefore(123));
-        $this->claimFactory->shouldReceive('make')->twice()->with('iat')->andReturn(new IssuedAt(123));
+        $this->claimFactory->shouldReceive('make')->twice()->with('orig_iat')->andReturn(new IssuedAt(123));
 
         // custom claims that override
-        $this->claimFactory->shouldReceive('get')->twice()->with('sub', 1)->andReturn(new Subject(1));
+        $this->claimFactory->shouldReceive('get')->twice()->with('user_id', 1)->andReturn(new Subject(1));
 
         $this->claimFactory->shouldReceive('setTTL')->with(null)->andReturn($this->claimFactory);
         $this->claimFactory->shouldReceive('getTTL')->andReturn(null);
 
         // once
-        $claims = $this->factory->setTTL(null)->sub(1)->buildClaimsCollection();
+        $claims = $this->factory->setTTL(null)->user_id(1)->buildClaimsCollection();
 
         $this->validator->shouldReceive('setRefreshFlow->check')->andReturn($claims);
 
         // twice
-        $payload = $this->factory->setTTL(null)->sub(1)->make();
+        $payload = $this->factory->setTTL(null)->user_id(1)->make();
 
         $this->assertNull($payload->get('exp'));
 
@@ -213,9 +213,9 @@ class FactoryTest extends AbstractTestCase
     /** @test */
     public function it_should_set_the_default_claims()
     {
-        $this->factory->setDefaultClaims(['sub', 'iat']);
+        $this->factory->setDefaultClaims(['user_id', 'orig_iat']);
 
-        $this->assertSame($this->factory->getDefaultClaims(), ['sub', 'iat']);
+        $this->assertSame($this->factory->getDefaultClaims(), ['user_id', 'orig_iat']);
     }
 
     /** @test */
@@ -236,7 +236,7 @@ class FactoryTest extends AbstractTestCase
         $payload = $this->factory->withClaims($collection);
 
         $this->assertInstanceOf(Payload::class, $payload);
-        $this->assertSame($payload->get('sub'), 1);
+        $this->assertSame($payload->get('user_id'), 1);
     }
 
     /** @test */

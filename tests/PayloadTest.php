@@ -101,8 +101,8 @@ class PayloadTest extends AbstractTestCase
     /** @test */
     public function it_should_allow_array_access_on_the_payload()
     {
-        $this->assertTrue(isset($this->payload['iat']));
-        $this->assertSame($this->payload['sub'], 1);
+        $this->assertTrue(isset($this->payload['orig_iat']));
+        $this->assertSame($this->payload['user_id'], 1);
         $this->assertArrayHasKey('exp', $this->payload);
     }
 
@@ -110,7 +110,7 @@ class PayloadTest extends AbstractTestCase
     public function it_should_get_properties_of_payload_via_get_method()
     {
         $this->assertIsArray($this->payload->get());
-        $this->assertSame($this->payload->get('sub'), 1);
+        $this->assertSame($this->payload->get('user_id'), 1);
 
         $this->assertSame(
             $this->payload->get(function () {
@@ -123,13 +123,13 @@ class PayloadTest extends AbstractTestCase
     /** @test */
     public function it_should_get_multiple_properties_when_passing_an_array_to_the_get_method()
     {
-        $values = $this->payload->get(['sub', 'jti']);
+        $values = $this->payload->get(['user_id', 'jti']);
 
-        $sub = $values[0];
+        $Subject = $values[0];
         $jti = $values[1];
 
         $this->assertIsArray($values);
-        $this->assertSame($sub, 1);
+        $this->assertSame($Subject, 1);
         $this->assertSame($jti, 'foo');
     }
 
@@ -143,11 +143,11 @@ class PayloadTest extends AbstractTestCase
     /** @test */
     public function it_should_magically_get_a_property()
     {
-        $sub = $this->payload->getSubject();
+        $Subject = $this->payload->getSubject();
         $jti = $this->payload->getJwtId();
         $iss = $this->payload->getIssuer();
 
-        $this->assertSame($sub, 1);
+        $this->assertSame($Subject, 1);
         $this->assertSame($jti, 'foo');
         $this->assertSame($iss, 'http://example.com');
     }
@@ -157,11 +157,11 @@ class PayloadTest extends AbstractTestCase
     {
         $payload = $this->payload;
 
-        $sub = $payload('sub');
+        $Subject = $payload('user_id');
         $jti = $payload('jti');
         $iss = $payload('iss');
 
-        $this->assertSame($sub, 1);
+        $this->assertSame($Subject, 1);
         $this->assertSame($jti, 'foo');
         $this->assertSame($iss, 'http://example.com');
 
@@ -172,7 +172,7 @@ class PayloadTest extends AbstractTestCase
     public function it_should_throw_an_exception_when_magically_getting_a_property_that_does_not_exist()
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('The claim [Foo] does not exist on the payload');
+        $this->expectExceptionMessage('The claim [getFoo] does not exist on the payload');
 
         $this->payload->getFoo();
     }
@@ -184,7 +184,7 @@ class PayloadTest extends AbstractTestCase
 
         $this->assertInstanceOf(Expiration::class, $claims['exp']);
         $this->assertInstanceOf(JwtId::class, $claims['jti']);
-        $this->assertInstanceOf(Subject::class, $claims['sub']);
+        $this->assertInstanceOf(Subject::class, $claims['user_id']);
 
         $this->assertContainsOnlyInstancesOf(Claim::class, $claims);
     }
@@ -206,7 +206,7 @@ class PayloadTest extends AbstractTestCase
     public function it_should_match_values()
     {
         $values = $this->payload->toArray();
-        $values['sub'] = (string) $values['sub'];
+        $values['user_id'] = (string) $values['user_id'];
 
         $this->assertTrue($this->payload->matches($values));
     }
@@ -230,7 +230,7 @@ class PayloadTest extends AbstractTestCase
     public function it_should_not_match_values()
     {
         $values = $this->payload->toArray();
-        $values['sub'] = 'dummy_subject';
+        $values['user_id'] = 'dummy_subject';
 
         $this->assertFalse($this->payload->matches($values));
     }
@@ -239,7 +239,7 @@ class PayloadTest extends AbstractTestCase
     public function it_should_not_match_strict_values()
     {
         $values = $this->payload->toArray();
-        $values['sub'] = (string) $values['sub'];
+        $values['user_id'] = (string) $values['user_id'];
 
         $this->assertFalse($this->payload->matchesStrict($values));
         $this->assertFalse($this->payload->matches($values, true));

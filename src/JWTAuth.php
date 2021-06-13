@@ -14,7 +14,6 @@ namespace Tymon\JWTAuth;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 use Tymon\JWTAuth\Http\Parser\Parser;
 
-/** @deprecated */
 class JWTAuth extends JWT
 {
     /**
@@ -62,7 +61,7 @@ class JWTAuth extends JWT
      */
     public function authenticate()
     {
-        $id = $this->getPayload()->get('sub');
+        $id = $this->getPayload()->get('user_id');
 
         if (! $this->auth->byId($id)) {
             return false;

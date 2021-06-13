@@ -99,7 +99,7 @@ class PayloadValidatorTest extends AbstractTestCase
     public function it_should_throw_an_exception_when_providing_an_invalid_iat_claim()
     {
         $this->expectException(InvalidClaimException::class);
-        $this->expectExceptionMessage('Invalid value provided for claim [iat]');
+        $this->expectExceptionMessage('Invalid value provided for claim [orig_iat]');
 
         $claims = [
             new Subject(1),
@@ -156,12 +156,12 @@ class PayloadValidatorTest extends AbstractTestCase
     {
         $claims = [
             new Subject(1),
-            new Issuer('http://example.com'),
+            new IssuedAt($this->testNowTimestamp - 2600),
         ];
 
         $collection = Collection::make($claims);
 
-        $this->assertTrue($this->validator->setRequiredClaims(['iss', 'sub'])->isValid($collection));
+        $this->assertTrue($this->validator->setRequiredClaims(['orig_iat', 'user_id'])->isValid($collection));
     }
 
     /** @test */

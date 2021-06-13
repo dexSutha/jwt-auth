@@ -24,7 +24,7 @@ class IssuedAt extends Claim
     /**
      * {@inheritdoc}
      */
-    protected $name = 'iat';
+    protected $name = 'orig_iat';
 
     /**
      * {@inheritdoc}

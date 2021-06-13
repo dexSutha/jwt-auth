@@ -79,7 +79,7 @@ class JWTGuard implements Guard
             ($payload = $this->jwt->check(true)) &&
             $this->validateSubject()
         ) {
-            return $this->user = $this->provider->retrieveById($payload['sub']);
+            return $this->user = $this->provider->retrieveById($payload['user_id']);
         }
     }
 

@@ -23,10 +23,10 @@ class PayloadValidator extends Validator
      */
     protected $requiredClaims = [
         'iss',
-        'iat',
+        'orig_iat',
         'exp',
         'nbf',
-        'sub',
+        'user_id',
         'jti',
     ];
 
